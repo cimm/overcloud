@@ -7,6 +7,7 @@ import json
 class OverlandRequestHandler(BaseHTTPRequestHandler):
     content_type = 'application/json'
     encoding = 'utf-8'
+    token = '1234' # set to None to disable authentication
 
     def do_GET(self):
         self.send_error(405, 'Method Not Allowed')
@@ -41,7 +42,10 @@ class OverlandRequestHandler(BaseHTTPRequestHandler):
             self.send_error(403, 'User-Agent Not Allowed')
             return False
 
-        # FIXME: Add authentication
+        auth_header = self.headers.get('Authorization')
+        if auth_header and auth_header.startswith('Bearer ') and self.token:
+            token = auth_header.split(' ')[1]
+            return token == self.token
 
         return True
 
