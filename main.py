@@ -19,8 +19,4 @@ def run_server():
 
 
 if __name__ == '__main__':
-    #if len(sys.argv) != 2:
-    #    print('Usage: python main.py <path_to_geopackage>')
-    #    sys.exit(1)
-    #geopackage_path = sys.argv[1]
     run_server()

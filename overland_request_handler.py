@@ -1,13 +1,12 @@
 from geopackage import GeoPackage
 from http.server import BaseHTTPRequestHandler
-from shapely.geometry import Point
 import json
 
 
 class OverlandRequestHandler(BaseHTTPRequestHandler):
     content_type = 'application/json'
     encoding = 'utf-8'
-    token = '1234' # set to None to disable authentication
+    token = '1234'  # set to None to disable authentication
 
     def do_GET(self):
         self.send_error(405, 'Method Not Allowed')
@@ -19,8 +18,8 @@ class OverlandRequestHandler(BaseHTTPRequestHandler):
         length = int(self.headers.get('Content-Length', 0))
         body = self.rfile.read(length)
         try:
-            json_data = json.loads(body.decode(self.encoding))
-            self.store(json_data)
+            overland_json = json.loads(body.decode(self.encoding))
+            self.store(overland_json)
             #self.send_response(200)
             self.send_response(
                 400)  # FIXME: don't want to loose the client data for now
@@ -49,20 +48,11 @@ class OverlandRequestHandler(BaseHTTPRequestHandler):
 
         return True
 
-    def store(self, json_data):
-        # FIXME: Can this move to main?
-        path = "locdb.gpkg"
-        geopackage = GeoPackage(path, 'locations')
-        locations = {'geometry': [], 'timestamp': []}
-
-        #if os.path.exists(path):
-        #    print(f'File `{path}` already exists')
-        #    sys.exit(1)
-
-        for record in json_data['locations']:
-            point = Point(record['geometry']['coordinates'])
-            locations['geometry'].append(point)
-            timestamp = record['properties']['timestamp']
-            locations['timestamp'].append(timestamp)
-
-        geopackage.add_locations_to_layer(locations)
+    # FIXME: Can this method move to main?
+    def store(self, overland_json):
+        geopackage = GeoPackage('locdb.gpkg', 'locations')
+        frames = []
+        for location in overland_json['locations']:
+            frame = geopackage.json_to_frame(location)
+            frames.append(frame)
+        geopackage.save_frames_to_file(frames)
