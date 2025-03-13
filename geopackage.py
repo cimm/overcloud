@@ -15,6 +15,9 @@ class GeoPackage:
         data = {}
         data['geometry'] = [Point(json['geometry']['coordinates'])]
         for key, value in json['properties'].items():
+            if value is None:
+                data[key] = [None]
+                continue
             match key:
                 case 'timestamp':
                     value = pd.to_datetime(value)
