@@ -13,7 +13,7 @@ To recap:
 Overcloud is written in Python and uses the excellent [GeoPandas](https://geopandas.org/) library. If you have [Nix](https://nixos.org/) installed and [flakes enabled](https://nixos.wiki/wiki/flakes) you can run it in one go:
 
 ```sh
-nix run github:cimm/overcloud
+nix run github:cimm/overcloud -- --host 127.0.0.1 --token sEcretPasswOrd
 ```
 
 ## Development
@@ -21,8 +21,9 @@ nix run github:cimm/overcloud
 The development environment is easily configured via Nix as well, simply run:
 
 ```sh
-git clone github.com/cimm/overcloud
-nix develop github:cimm/overcloud
+git clone https://github.com/cimm/overcloud.git
+cd overcloud
+nix develop
 ```
 
 ## GDAL

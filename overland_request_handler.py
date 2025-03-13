@@ -6,7 +6,6 @@ import json
 class OverlandRequestHandler(BaseHTTPRequestHandler):
     content_type = 'application/json'
     encoding = 'utf-8'
-    token = '1234'  # set to None to disable authentication
 
     def do_GET(self):
         self.send_error(405, 'Method Not Allowed')
@@ -20,14 +19,12 @@ class OverlandRequestHandler(BaseHTTPRequestHandler):
         try:
             overland_json = json.loads(body.decode(self.encoding))
             self.store(overland_json)
-            #self.send_response(200)
-            self.send_response(
-                400)  # FIXME: don't want to loose the client data for now
+            self.send_response(200)
             self.send_header('Content-type', self.content_type)
             self.end_headers()
             self.wfile.write(
                 json.dumps({
-                    "result": "OK"
+                    "result": "ok"
                 }).encode(self.encoding))
         except json.JSONDecodeError:
             self.send_error(400, 'Invalid JSON')
@@ -42,9 +39,10 @@ class OverlandRequestHandler(BaseHTTPRequestHandler):
             return False
 
         auth_header = self.headers.get('Authorization')
-        if auth_header and auth_header.startswith('Bearer ') and self.token:
+        if auth_header and auth_header.startswith(
+                'Bearer ') and self.server.token:
             token = auth_header.split(' ')[1]
-            return token == self.token
+            return token == self.server.token
 
         return True
 
