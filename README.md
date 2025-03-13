@@ -68,7 +68,7 @@ ogr2ogr -append input.gpkg output.gpkg
 To clean up scattered location data recorded around my home Wi-Fi, I use this command. It updates all points where the "wifi" attribute is "MyHomeWiFi" to a single set of coordinates, effectively stacking them.
 
 ```sh
-ogrinfo input.gpkg -dialect sqlite -sql "UPDATE locations SET geom = GeomFromText('POINT(4.3499932, 50.8449861)', 4326) WHERE wifi = 'MyHomeWiFi'"
+ogrinfo input.gpkg -sql "UPDATE locations SET geom = ST_GeomFromText('POINT(4.3499932 50.8449861)', 4326) WHERE wifi = 'MyHomeWiFi'"
 ```
 
 ### GeoPackage to GeoJSON
