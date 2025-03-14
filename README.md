@@ -16,6 +16,9 @@ Overcloud is written in Python and uses the excellent [GeoPandas](https://geopan
 nix run github:cimm/overcloud -- --host 127.0.0.1 --token sEcretPasswOrd
 ```
 
+> [!WARNING]  
+> Overcloud does not utilize HTTPS, which means that all requests can be seen by anyone on the network. I personally run Overcloud on a server in my home that is not exposed to the internet.
+
 ## Development
 
 The development environment is easily configured via Nix as well, simply run:
